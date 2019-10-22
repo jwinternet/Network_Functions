@@ -1,0 +1,59 @@
+#!/usr/bin/python3
+"""
+Network Functions Module
+"""
+###############################################################################
+
+__author__ = "Jared Winter"
+__copyright__ = "Copyright 2019, jwinternet"
+__credits__ = ""
+__license__ = "GNU GPL v3"
+__version__ = "v0.0.9"
+__updated__ = "10/22/2019"
+__email__ = "jaredwinter2015@outlook.com"
+__contributors__ = ""
+__status__ = "PROD"
+
+###############################################################################
+
+def hostname_resolves(hostname):
+	"""
+	Sees if a hostname is resolveable in DNS.
+
+	:param hostname: The specified hostname
+	"""
+	try:
+		socket.gethostbyname(hostname)
+		return 1
+	except socket.error:
+		return 0
+
+def get_ip(node):
+	"""
+	Takes a hostname and resolves it to an IP address.
+
+	:param node: A hostname
+	"""
+	addr1 = socket.gethostbyname_ex(node)
+	addr2 = str(addr1[2])
+	addr3 = addr2.replace('[','').replace(']','').replace('\'','')
+	return addr3
+
+def get_subnet(node):
+	"""
+	Takes a device's hostname and strips off the last octet and  replaces it 
+    with a 0 (assumes subnets are allocated like classful Class C networks.
+
+	:param node: A device IP address
+	"""
+	addr1 = get_ip(node)
+	if addr1.endswith('253'): 
+		ip_subnet = addr1[:-3] + '0'
+	elif addr1.endswith('96'): 
+		ip_subnet = addr1[:-2] + '0'
+	return ip_subnet
+
+###############################################################################
+
+if __name__ == "__main__":
+	main()
